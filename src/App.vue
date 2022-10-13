@@ -1,32 +1,148 @@
 <template>
   <div id="app">
-    <nav>
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </nav>
-    <router-view/>
+    <keep-alive>
+      <router-view @dataChange="dataChange" @idChange="idChange" />
+    </keep-alive>
+    <div class="tab-bar">
+      <router-link
+        class="tab-bar-item icon-home"
+        tag="div"
+        :to="'/home/' + data + idValue"
+        ><span>首页</span></router-link
+      >
+      <router-link class="tab-bar-item icon-daily" tag="div" to="/daily">
+        <span>每日寄语</span>
+      </router-link>
+      <router-link class="tab-bar-item icon-videos" tag="div" to="/videos"
+        ><span>暖心视频</span>
+      </router-link>
+      <router-link class="tab-bar-item icon-read" tag="div" to="/read"
+        ><span>美文阅读</span>
+      </router-link>
+      <router-link class="tab-bar-item icon-user" tag="div" to="/user">
+        <span>用户中心</span>
+      </router-link>
+    </div>
   </div>
 </template>
 
-<style>
+<script>
+export default {
+  data() {
+    return {
+      data: "recommend",
+      id: null,
+    };
+  },
+
+  computed: {
+    idValue() {
+      if (this.id != undefined) {
+        return "?id=" + this.id;
+      }
+      return "?";
+    },
+  },
+
+  methods: {
+    dataChange(value) {
+      this.data = value;
+      // console.log(this.data);
+    },
+
+    idChange(value) {
+      this.id = value;
+      // console.log(this.id);
+    },
+  },
+};
+</script>
+
+<style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
 }
 
-nav {
-  padding: 30px;
-}
+.tab-bar {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 55px;
+  background-color: #fff;
+  padding-bottom: 5px;
+  box-sizing: border-box;
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+  .tab-bar-item {
+    flex: 1;
+    background-size: 24px 24px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    position: relative;
+    &.icon-home {
+      background-image: url(./assets/images/icon_menu_home_n.png);
+    }
 
-nav a.router-link-exact-active {
-  color: #42b983;
+    &.icon-daily {
+      background-image: url(./assets/images/icon_menu_day_n.png);
+    }
+
+    &.icon-videos {
+      background-image: url(./assets/images/icon_menu_video_n.png);
+    }
+
+    &.icon-read {
+      background-image: url(./assets/images/icon_menu_essay_n.png);
+    }
+
+    &.icon-user {
+      background-image: url(./assets/images/icon_menu_setting_n.png);
+    }
+
+    &.router-link-active {
+      &.icon-home {
+        background-image: url(./assets/images/icon_menu_home_s.png);
+        color: #f2a61a;
+      }
+
+      &.icon-daily {
+        background-image: url(./assets/images/icon_menu_day_s.png);
+        color: #f2a61a;
+      }
+
+      &.icon-videos {
+        background-image: url(./assets/images/icon_menu_video_s.png);
+        color: #f2a61a;
+      }
+
+      &.icon-read {
+        background-image: url(./assets/images/icon_menu_essay_s.png);
+        color: #f2a61a;
+      }
+
+      &.icon-user {
+        background-image: url(./assets/images/icon_menu_setting_s.png);
+        color: #f2a61a;
+      }
+
+      span {
+        color: #f2a61a;
+      }
+    }
+
+    span {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      margin: auto auto;
+      text-align: center;
+      font-size: 12px;
+      color: #868686;
+    }
+  }
 }
 </style>
