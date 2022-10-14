@@ -5,7 +5,7 @@ import DailyView from '../views/DailyView.vue'
 import VideosView from '../views/VideosView.vue'
 import ReadView from '../views/ReadView.vue'
 import userView from '../views/userView.vue'
-import SearchView from '../views/SearchView.vue'
+import SearchView from '../views/Search/SearchView.vue'
 
 
 
@@ -30,7 +30,7 @@ const routes = [
       {
         path: ':data',
         name: ':data',
-        component: () => import("../views/HomeView/HomeMainView.vue"),
+        component: () => import("../components/HomeMainComponent.vue"),
       },
     ]
   },
@@ -63,6 +63,13 @@ const routes = [
     path: '/search',
     name: "search",
     component: SearchView,
+    children: [
+      {
+        path: 'main',
+        name: 'main',
+        component: () => import("../components/HomeMainComponent.vue"),
+      },
+    ]
   }
 
 ]

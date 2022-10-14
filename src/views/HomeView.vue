@@ -1,19 +1,20 @@
 <template>
   <div class="home">
     <HomeTopView
-      v-on="$listeners"
-      @dataChange="dataChange"
-      @idChange="idChange"
+        v-on="$listeners"
+        @dataChange="dataChange"
+        @idChange="idChange"
     />
 
-    <keep-alive>
-      <router-view :url="url" :data="data" :id="id" />
-    </keep-alive>
+
+    <HomeMainComponent :url="url" :data="data" :id="id"/>
+
   </div>
 </template>
 
 <script>
 import HomeTopView from "@/views/HomeView/HomeTopView.vue";
+import HomeMainComponent from "@/components/HomeMainComponent.vue"
 
 export default {
   data() {
@@ -43,6 +44,7 @@ export default {
 
   components: {
     HomeTopView,
+    HomeMainComponent
   },
 };
 </script>

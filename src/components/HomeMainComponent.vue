@@ -1,36 +1,36 @@
 <template>
   <div class="item" ref="item" @scroll.passive="readScrollFnc">
     <van-list
-      :immediate-check="false"
-      v-model="loading"
-      :finished="finished"
-      finished-text="没有更多了"
-      @load="onLoad"
+        :immediate-check="false"
+        v-model="loading"
+        :finished="finished"
+        finished-text="没有更多了"
+        @load="onLoad"
     >
       <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
         <div
-          class="list"
-          v-for="(item, index) in dataPage.dataItem"
-          :key="index + new Date().getTime() + item.time"
+            class="list"
+            v-for="(item, index) in dataPage.dataItem"
+            :key="index + new Date().getTime() + item.time"
         >
           <div class="top">
             <div class="Profile-photo">
-              <img class="img-auto yuan" :src="item.avatar" alt="" />
+              <img class="img-auto yuan" :src="item.avatar" alt=""/>
             </div>
             <div class="name">{{ item.name }}</div>
             <div class="icon-sl">
               <img
-                class="img-auto"
-                src="@/assets/images/ic_feeds_more.png"
-                alt=""
+                  class="img-auto"
+                  src="@/assets/images/ic_feeds_more.png"
+                  alt=""
               />
             </div>
             <div class="time">
               <div class="icon-time">
                 <img
-                  class="img-auto"
-                  src="@/assets/images/icon_time.png"
-                  alt=""
+                    class="img-auto"
+                    src="@/assets/images/icon_time.png"
+                    alt=""
                 />
               </div>
               <div class="date">{{ date(item.time) }}</div>
@@ -38,8 +38,8 @@
           </div>
           <div class="text">{{ item.title }}</div>
           <div
-            class="img"
-            :style="{
+              class="img"
+              :style="{
               width: '100%',
               height: `calc(${
                 item.icons[0].h == 0 ? 497 : item.icons[0].h
@@ -47,38 +47,38 @@
             }"
           >
             <img
-              class="img-auto yuan-border"
-              radius="5"
-              @click="imgLook(item.icons[0].url)"
-              :src="item.icons[0].url"
-              :v-lazy="item.icons[0].url"
+                class="img-auto yuan-border"
+                radius="5"
+                @click="imgLook(item.icons[0].url)"
+                :src="item.icons[0].url"
+                :v-lazy="item.icons[0].url"
             />
           </div>
 
           <div class="main">
             <div
-              class="list-main copy"
-              @click="copy(item.title, item.icons[0].url)"
+                class="list-main copy"
+                @click="copy(item.title, item.icons[0].url)"
             >
               <div class="icon">
-                <img class="img-auto" src="@/assets/images/copy.png" alt="" />
+                <img class="img-auto" src="@/assets/images/copy.png" alt=""/>
               </div>
               <div class="main-text">复制内容</div>
             </div>
             <div class="list-main">
               <div class="icon" v-if="!item.check">
-                <img class="img-auto" src="@/assets/images/xing.png" alt="" />
+                <img class="img-auto" src="@/assets/images/xing.png" alt=""/>
               </div>
               <div class="icon" v-if="item.check">
                 <img
-                  class="img-auto"
-                  src="@/assets/images/activexing.png"
-                  alt=""
+                    class="img-auto"
+                    src="@/assets/images/activexing.png"
+                    alt=""
                 />
               </div>
               <div
-                class="main-text"
-                @click="
+                  class="main-text"
+                  @click="
                   showpopup(
                     item.avatar,
                     item.name,
@@ -96,7 +96,7 @@
             </div>
             <div class="list-main" @click="shareMain()">
               <div class="icon">
-                <img class="img-auto" src="@/assets/images/share.png" alt="" />
+                <img class="img-auto" src="@/assets/images/share.png" alt=""/>
               </div>
               <div class="main-text">分享内容</div>
             </div>
@@ -105,29 +105,29 @@
         <div class="pont" v-show="pont" @click="backTop">
           <div class="img">
             <img
-              ref="active"
-              class="img-auto"
-              src="@/assets/images/ic_list_scroll_top_arraw.png"
-              alt=""
+                ref="active"
+                class="img-auto"
+                src="@/assets/images/ic_list_scroll_top_arraw.png"
+                alt=""
             />
           </div>
         </div>
       </van-pull-refresh>
     </van-list>
     <van-popup
-      class="popup"
-      v-model="show"
-      lazy-render
-      round
-      position="bottom"
-      :style="{ height: '30%' }"
+        class="popup"
+        v-model="show"
+        lazy-render
+        round
+        position="bottom"
+        :style="{ height: '30%' }"
     >
       <div class="choose-btn">
         <div class="colse-btn" @click="colseBtn">
           <img
-            class="img-auto"
-            src="@/assets/images/ic_layer_menu_close.png"
-            alt=""
+              class="img-auto"
+              src="@/assets/images/ic_layer_menu_close.png"
+              alt=""
           />
         </div>
         <div class="text">选择收藏夹</div>
@@ -135,21 +135,23 @@
           <span>新建</span>
           <div class="add-btn">
             <img
-              class="img-auto"
-              src="@/assets/images/ic_permissions_file.png"
-              alt=""
+                class="img-auto"
+                src="@/assets/images/ic_permissions_file.png"
+                alt=""
             />
           </div>
         </div>
       </div>
       <div class="file" @click="collection(dataLs)">
         <div class="img">
-          <img class="img-auto" src="@/assets/images/ic_folder.png" alt="" />
+          <img class="img-auto" src="@/assets/images/ic_folder.png" alt=""/>
         </div>
         <div class="file-name">默认收藏夹</div>
-      </div></van-popup
+      </div>
+    </van-popup
     >
-    <van-share-sheet v-model="showShare" :options="options" />
+    <van-share-sheet v-model="showShare" :options="options"/>
+    <MessageNoneComponent v-if="showMsg"></MessageNoneComponent>
   </div>
 </template>
 
@@ -158,8 +160,11 @@
 
 <script>
 import Clipboard from "clipboard";
+import MessageNoneComponent from "@/components/MessageNoneComponent.vue"
 
-import { ImagePreview } from "vant";
+
+import {ImagePreview} from "vant";
+
 export default {
   props: {
     url: {
@@ -181,7 +186,6 @@ export default {
         readScroll: 0,
         base: "",
       },
-
       isLoading: false,
       loading: false,
       finished: false,
@@ -189,18 +193,19 @@ export default {
       show: false,
       showShare: false,
       dataLs: {},
+      showMsg: false,
       options: [
         [
-          { name: "微信好友", icon: "wechat" },
-          { name: "QQ好友", icon: "qq" },
-          { name: "朋友圈", icon: "wechat-moments" },
-          { name: "微博", icon: "weibo" },
+          {name: "微信好友", icon: "wechat"},
+          {name: "QQ好友", icon: "qq"},
+          {name: "朋友圈", icon: "wechat-moments"},
+          {name: "微博", icon: "weibo"},
         ],
         [
-          { name: "复制链接", icon: "link" },
-          { name: "分享海报", icon: "poster" },
-          { name: "二维码", icon: "qrcode" },
-          { name: "小程序码", icon: "weapp-qrcode" },
+          {name: "复制链接", icon: "link"},
+          {name: "分享海报", icon: "poster"},
+          {name: "二维码", icon: "qrcode"},
+          {name: "小程序码", icon: "weapp-qrcode"},
         ],
       ],
     };
@@ -233,6 +238,10 @@ export default {
     },
   },
 
+  components: {
+    MessageNoneComponent
+  },
+
   methods: {
     imgLook(url) {
       ImagePreview({
@@ -243,22 +252,22 @@ export default {
     getData(url, loading) {
       if (loading == true) {
         this.$axios
-          .get(url, {
-            params: { page: 0, r: new Date().getTime(), full: true },
-          })
-          .then((data) => {
-            console.log(data);
-            this.dataPage.base = data.data.base;
-            this.dataPage.page = 0;
-            this.dataPage.dataItem = data.data.data.filter((item) => {
-              item.check = false;
-              return item.cate == 101;
+            .get(url, {
+              params: {page: 0, r: new Date().getTime(), full: true},
+            })
+            .then((data) => {
+              // console.log(data);
+              this.dataPage.base = data.data.base;
+              this.dataPage.page = 0;
+              this.dataPage.dataItem = data.data.data.filter((item) => {
+                item.check = false;
+                return item.cate == 101;
+              });
+              this.dataPage.readScroll = 0;
+              console.log(this.dataPage);
+              this.saveDate(this.dataPage);
+              this.active();
             });
-            this.dataPage.readScroll = 0;
-            console.log(this.dataPage);
-            this.saveDate(this.dataPage);
-            this.active();
-          });
       } else {
         let MainData = sessionStorage[`${this.data}-${this.id}`];
         if (MainData) {
@@ -273,27 +282,32 @@ export default {
           this.active();
         } else {
           this.$axios
-            .get(url, {
-              params: {
-                page: 0,
-                r: new Date().getTime(),
-                full: true,
-              },
-            })
-            .then((data) => {
-              this.dataPage.base = data.data.base;
-              this.dataPage.dataItem = data.data.data.filter((item) => {
-                item.check = false;
-                return item.cate == 101;
+              .get(url, {
+                params: {
+                  page: 0,
+                  r: new Date().getTime(),
+                  full: true,
+                },
+              })
+              .then((data) => {
+                console.log(data)
+                if (data.data.msg == '暂无更多推荐内容!') {
+                  this.showMsg = true
+                  return
+                }
+                this.dataPage.base = data.data.base;
+                this.dataPage.dataItem = data.data.data.filter((item) => {
+                  item.check = false;
+                  return item.cate == 101;
+                });
+                console.log(this.dataPage.base);
+                console.log(this.dataPage);
+                this.saveDate(this.dataPage);
+                this.$nextTick(() => {
+                  this.$refs.item.scrollTop = 0;
+                });
+                this.active();
               });
-              console.log(this.dataPage.base);
-              console.log(this.dataPage);
-              this.saveDate(this.dataPage);
-              this.$nextTick(() => {
-                this.$refs.item.scrollTop = 0;
-              });
-              this.active();
-            });
         }
       }
 
@@ -301,28 +315,28 @@ export default {
         let MainData = sessionStorage[`${this.data}-${this.id}`];
         MainData = JSON.parse(MainData);
         this.$axios
-          .get(url, {
-            params: {
-              page: MainData.page++,
-              r: new Date().getTime(),
-              base: this.dataPage.base,
-              full: false,
-            },
-          })
-          .then((data) => {
-            this.dataPage.base = data.data.base;
+            .get(url, {
+              params: {
+                page: MainData.page++,
+                r: new Date().getTime(),
+                base: this.dataPage.base,
+                full: false,
+              },
+            })
+            .then((data) => {
+              this.dataPage.base = data.data.base;
 
-            this.dataPage.dataItem.push(
-              ...data.data.data.filter((item) => {
-                item.check = false;
-                return item.cate == 101;
-              })
-            );
-            console.log(this.dataPage.base);
-            console.log(this.dataPage);
-            this.saveDate(this.dataPage);
-            this.active();
-          });
+              this.dataPage.dataItem.push(
+                  ...data.data.data.filter((item) => {
+                    item.check = false;
+                    return item.cate == 101;
+                  })
+              );
+              console.log(this.dataPage.base);
+              console.log(this.dataPage);
+              this.saveDate(this.dataPage);
+              this.active();
+            });
       }
     },
 
@@ -399,19 +413,19 @@ export default {
               //设置相应类型为blob
               responseType: "blob",
             }).then(
-              //得到的是一个blob对象
-              (res) => {
-                let url = window.URL.createObjectURL(res.data);
-                const a = document.createElement("a");
-                a.href = url;
-                a.download = name;
-                a.click();
-                this.$toast({
-                  message: "图片保存完成",
-                  position: "bottom",
-                  className: "imgDownload",
-                });
-              }
+                //得到的是一个blob对象
+                (res) => {
+                  let url = window.URL.createObjectURL(res.data);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = name;
+                  a.click();
+                  this.$toast({
+                    message: "图片保存完成",
+                    position: "bottom",
+                    className: "imgDownload",
+                  });
+                }
             );
           },
         });
@@ -435,9 +449,9 @@ export default {
       });
     },
 
-    getContainer() {
-      return document.querySelector(".main-text");
-    },
+    // getContainer() {
+    //   return document.querySelector(".main-text");
+    // },
 
     collection(data) {
       let dataList = JSON.parse(localStorage.getItem("collection")) ?? [];
@@ -445,8 +459,8 @@ export default {
         dataList.push(data);
       } else {
         dataList.splice(
-          dataList.findIndex((item) => item.idLs === data.idLs),
-          1
+            dataList.findIndex((item) => item.idLs === data.idLs),
+            1
         );
       }
       let dataListStr = JSON.stringify(dataList);
@@ -466,9 +480,9 @@ export default {
         // );
         if (dataList.length !== 0) {
           if (
-            dataList.findIndex(
-              (item) => item.idLs === dataArr.dataItem[i].id
-            ) === -1
+              dataList.findIndex(
+                  (item) => item.idLs === dataArr.dataItem[i].id
+              ) === -1
           ) {
             dataArr.dataItem[i].check = false;
           } else {
@@ -520,6 +534,7 @@ export default {
   },
 
   created() {
+    console.log(this.url)
     this.getData(this.url, this.loading);
   },
 
@@ -552,9 +567,11 @@ export default {
   .popup {
     width: 100%;
     height: 300px !important;
+
     .choose-btn {
       width: 100%;
       height: 40px;
+
       .colse-btn {
         width: 20px;
         height: 20px;
@@ -576,10 +593,12 @@ export default {
         font-size: 14px;
         font-weight: bold;
       }
+
       .add {
         height: 40px;
         float: right;
         margin-right: 10px;
+
         span {
           height: 40px;
           line-height: 40px;
@@ -603,11 +622,13 @@ export default {
       height: 40px;
       padding: 0 10px;
       box-sizing: border-box;
+
       .img {
         width: 40px;
         height: 40px;
         float: left;
       }
+
       .file-name {
         float: left;
         height: 40px;
@@ -648,14 +669,17 @@ export default {
       width: 100vw;
       height: 30px;
       margin-bottom: 10px;
+
       .Profile-photo {
         float: left;
         width: 30px;
         height: 30px;
+
         .yuan {
           border-radius: 50%;
         }
       }
+
       .name {
         float: left;
         height: 30px;
@@ -677,6 +701,7 @@ export default {
         float: right;
         height: 30px;
         margin-right: 30px;
+
         .icon-time {
           width: 20px;
           height: 20px;
@@ -684,6 +709,7 @@ export default {
           margin-top: 5px;
           margin-right: 5px;
         }
+
         .date {
           float: left;
           font-size: 12px;
@@ -700,9 +726,11 @@ export default {
       line-height: 25px;
       margin-bottom: 10px;
     }
+
     .img {
       border-radius: 5px;
       margin-bottom: 10px;
+
       .yuan-border {
         border-radius: 5px;
       }
@@ -744,6 +772,7 @@ export default {
           margin-top: 10px;
           margin-right: 2px;
         }
+
         .main-text {
           height: 40px;
           float: left;
