@@ -1,23 +1,23 @@
 <template>
   <div id="app">
-    <keep-alive>
-      <router-view @dataChange="dataChange" @idChange="idChange" />
-    </keep-alive>
+    <!--    <keep-alive>-->
+    <router-view @dataChange="dataChange" @idChange="idChange"/>
+    <!--    </keep-alive>-->
     <div class="tab-bar">
       <router-link
-        class="tab-bar-item icon-home"
-        tag="div"
-        :to="'/home/' + data + idValue"
-        ><span>首页</span></router-link
+          class="tab-bar-item icon-home"
+          tag="div"
+          :to="'/home/' + data + idValue"
+      ><span>首页</span></router-link
       >
       <router-link class="tab-bar-item icon-daily" tag="div" to="/daily">
         <span>每日寄语</span>
       </router-link>
       <router-link class="tab-bar-item icon-videos" tag="div" to="/videos"
-        ><span>暖心视频</span>
+      ><span>暖心视频</span>
       </router-link>
       <router-link class="tab-bar-item icon-read" tag="div" to="/read"
-        ><span>美文阅读</span>
+      ><span>美文阅读</span>
       </router-link>
       <router-link class="tab-bar-item icon-user" tag="div" to="/user">
         <span>用户中心</span>
@@ -54,7 +54,26 @@ export default {
       this.id = value;
       // console.log(this.id);
     },
+
+    unload() {
+      sessionStorage.clear();
+      this.$router.go(0)
+    },
   },
+
+  mounted() {
+    // 监听浏览器的刷新事件
+    window.addEventListener("beforeunload", this.unload);
+    // window.addEventListener('beforeunload', e => this.unload) // 注册一个匿名函数
+  }
+  ,
+
+  // 2 销毁这个监听事件
+  destroyed() {
+    // 销毁这个监听事件，需要找到这个函数，如果使用的是匿名函数的话，无法查找这个函数，这个事件也就没有办法被移除 ，在其他页面仍然会执行这个监听事件
+    window.removeEventListener("beforeunload", this.unload);
+  }
+  ,
 };
 </script>
 
@@ -82,6 +101,7 @@ export default {
     background-repeat: no-repeat;
     background-position: center center;
     position: relative;
+
     &.icon-home {
       background-image: url(./assets/images/icon_menu_home_n.png);
     }

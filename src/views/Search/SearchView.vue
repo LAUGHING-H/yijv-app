@@ -60,7 +60,7 @@ export default {
 
   methods: {
     save() {
-      console.log(this.history, 1322)
+      //(this.history, 1322)
       if (this.history.indexOf(this.value) == -1) {
         this.history.push(this.value);
       }
@@ -71,7 +71,7 @@ export default {
       this.show = false
     },
     goback() {
-      history.go(-1)
+      this.$router.go(-1)
     },
 
     clearList(value) {

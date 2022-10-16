@@ -21,6 +21,7 @@ export default {
     return {
       data: "recommend",
       id: undefined,
+      active: 1
     };
   },
 
@@ -33,12 +34,12 @@ export default {
   methods: {
     dataChange(value) {
       this.data = value;
-      // console.log(this.data);
+      // (this.data);
     },
 
     idChange(value) {
       this.id = value;
-      // console.log(this.id);
+      // (this.id);
     },
   },
 

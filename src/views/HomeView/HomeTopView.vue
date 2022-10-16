@@ -31,7 +31,7 @@
         </van-tab>
       </van-tabs>
     </van-col>
-    <van-col class="col" span="2">
+    <van-col class="col" span="2" @click="goto">
       <div class="icon-search">
         <img
             class="img-auto"
@@ -93,7 +93,17 @@ export default {
       ],
     };
   },
+
   mounted() {
+    if (sessionStorage.active) {
+      this.active = JSON.parse(sessionStorage.active);
+      let {data} = this.$route.params;
+      let {id} = this.$route.query;
+
+      this.$emit("dataChange", data);
+      this.$emit("idChange", id);
+    }
+
     if (window.history && window.history.pushState) {
       history.pushState(null, null, document.URL); //这里有没有都无所谓，最好是有以防万一
       window.addEventListener("popstate", this.goBack, false);
@@ -103,7 +113,9 @@ export default {
 
   destroyed() {
     window.removeEventListener("popstate", this.goBack, false);
+    sessionStorage.active = this.active;
   },
+
 
   methods: {
     getData() {
@@ -113,6 +125,7 @@ export default {
 
         this.$emit("dataChange", data);
         this.$emit("idChange", id);
+        // console.log(this.active)
       });
     },
 
@@ -145,6 +158,10 @@ export default {
         }
       });
     },
+
+    goto() {
+      this.$router.push({path: '/favorites'});
+    }
   },
 };
 </script>
@@ -167,12 +184,6 @@ export default {
     justify-content: space-between;
     overflow: hidden;
 
-    .van-tabs__nav--line {
-      .van-tabs__nav--complete {
-        padding: 0;
-      }
-    }
-
     .van-tab--active {
       font-size: 16px;
       font-weight: bold;
@@ -180,6 +191,10 @@ export default {
 
     .van-tabs__nav--line {
       padding-bottom: 0;
+    }
+
+    .van-tabs__nav--complete {
+      padding: 0;
     }
 
     .van-tabs__line {
@@ -192,9 +207,6 @@ export default {
       font-size: 13px;
       color: #454545;
 
-      &:first-child {
-        padding-left: 0;
-      }
     }
 
     .main {

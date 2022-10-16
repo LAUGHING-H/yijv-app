@@ -12,7 +12,7 @@
         <div
             class="list"
             v-for="(item, index) in dataPage.dataItem"
-            :key="index + new Date().getTime() + item.time"
+            :key="index"
         >
           <div class="top">
             <div class="Profile-photo">
@@ -39,27 +39,27 @@
           </div>
           <div class="text">{{ item.title }}</div>
           <div
+              @click="goReading(item.id)"
               class="img"
               :style="{
               width: '100%',
               height: `calc(${
-                item.icons[0].h == 0 ? 497 : item.icons[0].h
+                item.h == 0 ? 497 : item.h
               }px /1.4)`,
             }"
           >
             <img
                 class="img-auto yuan-border"
                 radius="5"
-                @click="imgLook(item.icons[0].url)"
-                :src="item.icons[0].url"
-                :v-lazy="item.icons[0].url"
+                :src="item.icon"
+                :v-lazy="item.icon"
             />
           </div>
 
           <div class="main">
             <div
                 class="list-main copy"
-                @click="copy(item.title, item.icons[0].url)"
+                @click="copy(item.title, item.icon)"
             >
               <div class="icon">
                 <img class="img-auto" src="@/assets/images/copy.png" alt=""/>
@@ -85,8 +85,8 @@
                     item.name,
                     item.time,
                     item.title,
-                    item.icons[0].h,
-                    item.icons[0].url,
+                    item.h,
+                    item.icon,
                     item.id,
                     item.check
                   )
@@ -179,7 +179,7 @@ import Clipboard from "clipboard";
 import MessageNoneComponent from "@/components/MessageNoneComponent.vue"
 
 
-import {ImagePreview} from "vant";
+// import {ImagePreview} from "vant";
 
 export default {
   props: {
@@ -192,6 +192,9 @@ export default {
     id: {
       type: String,
     },
+    random: {
+      type: Boolean,
+    }
   },
 
   data() {
@@ -253,6 +256,14 @@ export default {
         }
       };
     },
+
+    order() {
+      if (this.random) {
+        return 1
+      } else {
+        return 0
+      }
+    },
   },
 
   components: {
@@ -260,10 +271,9 @@ export default {
   },
 
   methods: {
-    imgLook(url) {
-      ImagePreview({
-        images: [url],
-      });
+    goReading(id) {
+      // console.log(id)
+      this.$router.push({name: "reading", query: {id: `${id}`}})
     },
 
     showT() {
@@ -274,7 +284,7 @@ export default {
       if (loading == true) {
         this.$axios
             .get(url, {
-              params: {page: 0, r: new Date().getTime(), full: true},
+              params: {page: 0, r: new Date().getTime(), full: true, order: this.order},
             })
             .then((data) => {
               // console.log(data);
@@ -282,10 +292,10 @@ export default {
               this.dataPage.page = 0;
               this.dataPage.dataItem = data.data.data.filter((item) => {
                 item.check = false;
-                return item.cate == 101;
+                return item.cate == 103;
               });
               this.dataPage.readScroll = 0;
-              //console.log(this.dataPage);
+              // console.log(this.dataPage);
               this.saveDate(this.dataPage);
               this.active();
             });
@@ -308,6 +318,7 @@ export default {
                   page: 0,
                   r: new Date().getTime(),
                   full: true,
+                  order: this.order
                 },
               })
               .then((data) => {
@@ -316,10 +327,11 @@ export default {
                   this.showMsg = true
                   return
                 }
+                console.log(data)
                 this.dataPage.base = data.data.base;
                 this.dataPage.dataItem = data.data.data.filter((item) => {
                   item.check = false;
-                  return item.cate == 101;
+                  return item.cate == 103;
                 });
                 //console.log(this.dataPage.base);
                 //console.log(this.dataPage);
@@ -342,6 +354,7 @@ export default {
                 r: new Date().getTime(),
                 base: this.dataPage.base,
                 full: false,
+                order: this.order
               },
             })
             .then((data) => {
@@ -350,7 +363,7 @@ export default {
               this.dataPage.dataItem.push(
                   ...data.data.data.filter((item) => {
                     item.check = false;
-                    return item.cate == 101;
+                    return item.cate == 103;
                   })
               );
               //console.log(this.dataPage.base);
@@ -472,10 +485,10 @@ export default {
     // },
 
     collection(data) {
-      console.log(data)
+      // console.log(data)
       let dataList = JSON.parse(localStorage.getItem("collection")) ?? [];
       if (dataList.findIndex((item) => item.idLs == data.idLs) === -1) {
-        console.log(data)
+        // console.log(data)
         dataList.push(data);
       } else {
         dataList.splice(
@@ -490,6 +503,7 @@ export default {
     },
 
     active() {
+      this.playingIndex = null
       let dataArr = this.dataPage;
       let dataList = JSON.parse(localStorage.getItem("collection")) ?? [];
 
@@ -544,13 +558,34 @@ export default {
     shareMain() {
       this.showShare = true;
     },
+
   },
 
   watch: {
     url(newUrl) {
       this.getData(newUrl, this.loading);
+      this.video()
       this.active();
     },
+
+    random(newValue) {
+      if (newValue == true) {
+        this.$toast({
+          message: "切换随机模式",
+          position: "bottom",
+          className: "copyToast",
+        })
+      } else {
+        this.$toast({
+          message: "关闭随机模式",
+          position: "bottom",
+          className: "copyToast",
+        })
+      }
+      this.$refs.item.scrollTop = 0
+      this.isLoading = true
+      this.onRefresh()
+    }
   },
 
   created() {
@@ -586,7 +621,10 @@ export default {
   overflow: scroll;
   padding-bottom: 95px;
   background-color: #f2f2f2;
-  z-index: 1;
+
+  .random-change {
+    height: 40px;
+  }
 
   .popup {
     width: 100%;

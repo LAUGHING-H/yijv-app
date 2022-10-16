@@ -75,3 +75,8 @@ body .imgDownload {
     color: black;
 }
 
+.video-js.vjs-paused .vjs-big-play-button{
+    display: none;
+}
+
+

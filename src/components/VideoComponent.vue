@@ -12,7 +12,7 @@
         <div
             class="list"
             v-for="(item, index) in dataPage.dataItem"
-            :key="index + new Date().getTime() + item.time"
+            :key="index"
         >
           <div class="top">
             <div class="Profile-photo">
@@ -42,24 +42,36 @@
               class="img"
               :style="{
               width: '100%',
-              height: `calc(${
-                item.icons[0].h == 0 ? 497 : item.icons[0].h
-              }px /1.4)`,
+              height: `199.69px`
             }"
           >
             <img
+                v-if="playingIndex !== index"
                 class="img-auto yuan-border"
                 radius="5"
-                @click="imgLook(item.icons[0].url)"
-                :src="item.icons[0].url"
-                :v-lazy="item.icons[0].url"
+                @click="imgLook(index)"
+                :src="item.icon"
+                :v-lazy="item.icon"
             />
+
+            <div class="play-icon" v-if="playingIndex !== index" @click="imgLook(index)">
+              <img src="../assets/images/gdt_ic_express_play.png">
+            </div>
+
+            <video-player
+                v-if="playingIndex == index"
+                :src="videoOptions[index].sources[0].src"
+                class="video-player vjs-custom-skin img-auto"
+                ref="videoPlayer"
+                :playsinline="true"
+                :options="videoOptions[index]"
+            ></video-player>
           </div>
 
           <div class="main">
             <div
                 class="list-main copy"
-                @click="copy(item.title, item.icons[0].url)"
+                @click="copy(item.title, item.icon)"
             >
               <div class="icon">
                 <img class="img-auto" src="@/assets/images/copy.png" alt=""/>
@@ -85,8 +97,8 @@
                     item.name,
                     item.time,
                     item.title,
-                    item.icons[0].h,
-                    item.icons[0].url,
+                    item.h,
+                    item.icon,
                     item.id,
                     item.check
                   )
@@ -179,7 +191,7 @@ import Clipboard from "clipboard";
 import MessageNoneComponent from "@/components/MessageNoneComponent.vue"
 
 
-import {ImagePreview} from "vant";
+// import {ImagePreview} from "vant";
 
 export default {
   props: {
@@ -192,6 +204,9 @@ export default {
     id: {
       type: String,
     },
+    random: {
+      type: Boolean,
+    }
   },
 
   data() {
@@ -211,6 +226,8 @@ export default {
       showShare: false,
       dataLs: {},
       showMsg: false,
+      videoOptions: [],
+      playingIndex: null,
       options: [
         [
           {name: "微信好友", icon: "wechat"},
@@ -253,6 +270,14 @@ export default {
         }
       };
     },
+
+    order() {
+      if (this.random) {
+        return 1
+      } else {
+        return 0
+      }
+    },
   },
 
   components: {
@@ -260,10 +285,9 @@ export default {
   },
 
   methods: {
-    imgLook(url) {
-      ImagePreview({
-        images: [url],
-      });
+    imgLook(index) {
+      this.playingIndex = index
+      console.log(this.playingIndex)
     },
 
     showT() {
@@ -274,7 +298,7 @@ export default {
       if (loading == true) {
         this.$axios
             .get(url, {
-              params: {page: 0, r: new Date().getTime(), full: true},
+              params: {page: 0, r: new Date().getTime(), full: true, order: this.order},
             })
             .then((data) => {
               // console.log(data);
@@ -282,12 +306,13 @@ export default {
               this.dataPage.page = 0;
               this.dataPage.dataItem = data.data.data.filter((item) => {
                 item.check = false;
-                return item.cate == 101;
+                return item.cate == 102;
               });
               this.dataPage.readScroll = 0;
               //console.log(this.dataPage);
               this.saveDate(this.dataPage);
               this.active();
+              this.video()
             });
       } else {
         let MainData = sessionStorage[`${this.data}-${this.id}`];
@@ -308,6 +333,7 @@ export default {
                   page: 0,
                   r: new Date().getTime(),
                   full: true,
+                  order: this.order
                 },
               })
               .then((data) => {
@@ -316,10 +342,11 @@ export default {
                   this.showMsg = true
                   return
                 }
+                console.log(data)
                 this.dataPage.base = data.data.base;
                 this.dataPage.dataItem = data.data.data.filter((item) => {
                   item.check = false;
-                  return item.cate == 101;
+                  return item.cate == 102;
                 });
                 //console.log(this.dataPage.base);
                 //console.log(this.dataPage);
@@ -328,6 +355,7 @@ export default {
                   this.$refs.item.scrollTop = 0;
                 });
                 this.active();
+                this.video()
               });
         }
       }
@@ -342,6 +370,7 @@ export default {
                 r: new Date().getTime(),
                 base: this.dataPage.base,
                 full: false,
+                order: this.order
               },
             })
             .then((data) => {
@@ -350,13 +379,14 @@ export default {
               this.dataPage.dataItem.push(
                   ...data.data.data.filter((item) => {
                     item.check = false;
-                    return item.cate == 101;
+                    return item.cate == 102;
                   })
               );
               //console.log(this.dataPage.base);
               //console.log(this.dataPage);
               this.saveDate(this.dataPage);
               this.active();
+              this.video()
             });
       }
     },
@@ -472,10 +502,10 @@ export default {
     // },
 
     collection(data) {
-      console.log(data)
+      // console.log(data)
       let dataList = JSON.parse(localStorage.getItem("collection")) ?? [];
       if (dataList.findIndex((item) => item.idLs == data.idLs) === -1) {
-        console.log(data)
+        // console.log(data)
         dataList.push(data);
       } else {
         dataList.splice(
@@ -490,6 +520,7 @@ export default {
     },
 
     active() {
+      this.playingIndex = null
       let dataArr = this.dataPage;
       let dataList = JSON.parse(localStorage.getItem("collection")) ?? [];
 
@@ -544,18 +575,76 @@ export default {
     shareMain() {
       this.showShare = true;
     },
+
+
+    video() {
+      let arr = []
+      for (let i = 0; i < this.dataPage.dataItem.length; i++) {
+        let item = {
+          playbackRates: [0.5, 1.0, 1.5, 2.0, 3.0], // 可选的播放速度
+          autoplay: true, // 是否自动播放
+          muted: false, // 是否静音
+          loop: true, // 是否开启循环播放
+          preload: "auto", // 自动预加载
+          language: "zh-CN", // 语言，'en', 'zh-cn', 'zh-tw'
+          aspectRatio: "16:9", // 播放器高宽占比（例如"16:9"或"4:3"）
+          fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+          sources: [
+            {
+              type: "video/mp4", // 类型
+              src:
+                  `https://xqyl.app.edcdn.cn/api/rest/app/video/${this.dataPage.dataItem[i].params}`, // url地址
+            },
+          ],
+          // ${this.dataPage.dataItem[i].icon}
+          // poster:`../assets/images/ic_launcher.png`, // 封面地址
+          // height: `${this.dataPage.dataItem[i].h == 0 ? 497 : this.dataPage.dataItem[i].h / 1.4}`,
+          notSupportedMessage: "此视频暂无法播放，请稍后再试", // 允许覆盖Video.js无法播放媒体源时显示的默认信息。
+          controlBar: {
+            timeDivider: true, // 是否显示当前时间和持续时间的分隔符，"/"
+            durationDisplay: true, // 是否显示持续时间
+            remainingTimeDisplay: false, // 是否显示剩余时间
+            fullscreenToggle: true, // 是否显示全屏按钮
+          },
+        }
+        arr.push(item)
+      }
+      this.videoOptions = arr
+    }
   },
 
   watch: {
     url(newUrl) {
       this.getData(newUrl, this.loading);
+      this.video()
       this.active();
     },
+
+    random(newValue) {
+      if (newValue == true) {
+        this.$toast({
+          message: "切换随机模式",
+          position: "bottom",
+          className: "copyToast",
+        })
+      } else {
+        this.$toast({
+          message: "关闭随机模式",
+          position: "bottom",
+          className: "copyToast",
+        })
+      }
+      this.video()
+      this.$refs.item.scrollTop = 0
+      this.isLoading = true
+      this.onRefresh()
+    }
   },
 
   created() {
     //console.log(this.url)
     this.getData(this.url, this.loading);
+    this.video()
   }
   ,
 
@@ -586,7 +675,10 @@ export default {
   overflow: scroll;
   padding-bottom: 95px;
   background-color: #f2f2f2;
-  z-index: 1;
+
+  .random-change {
+    height: 40px;
+  }
 
   .popup {
     width: 100%;
@@ -785,9 +877,22 @@ export default {
     .img {
       border-radius: 5px;
       margin-bottom: 10px;
+      position: relative;
+
+      .play-icon {
+        width: 80px;
+        height: 60px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto auto;
+      }
 
       .yuan-border {
         border-radius: 5px;
+        position: relative;
       }
     }
 
