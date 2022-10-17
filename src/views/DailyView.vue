@@ -478,16 +478,16 @@ export default {
 
   .eg-text {
     position: fixed;
-    top: 345px;
-    left: 35px;
+    top: 52vh;
+    left: 10vw;
     color: #fff;
     font-size: 12px;
   }
 
   .ch-text {
     position: fixed;
-    top: 375px;
-    left: 35px;
+    top: 57vh;
+    left: 10vw;
     color: #fff;
     font-size: 12px;
   }
