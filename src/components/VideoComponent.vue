@@ -327,6 +327,11 @@ export default {
           });
           this.active();
         } else {
+          const toast = this.$toast.loading({
+            message: '加载中...',
+            forbidClick: true,
+            duration: 1,
+          });
           this.$axios
               .get(url, {
                 params: {
@@ -337,6 +342,7 @@ export default {
                 },
               })
               .then((data) => {
+                toast.clear()
                 //console.log(data)
                 if (data.data.msg == '暂无更多推荐内容!') {
                   this.showMsg = true

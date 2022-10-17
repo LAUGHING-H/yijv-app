@@ -39,7 +39,7 @@
           </div>
           <div class="text">{{ item.title }}</div>
           <div
-              @click="goReading(item.id)"
+              @click="goReading(item.id,item.title)"
               class="img"
               :style="{
               width: '100%',
@@ -271,14 +271,16 @@ export default {
   },
 
   methods: {
-    goReading(id) {
+    goReading(id, title) {
       // console.log(id)
-      this.$router.push({name: "reading", query: {id: `${id}`}})
-    },
+      this.$router.push({name: "reading", query: {id: `${id}`, title: `${title}`}})
+    }
+    ,
 
     showT() {
       this.showTwo = true
-    },
+    }
+    ,
 
     getData(url, loading) {
       if (loading == true) {
@@ -312,6 +314,11 @@ export default {
           });
           this.active();
         } else {
+          const toast = this.$toast.loading({
+            message: '加载中...',
+            forbidClick: true,
+            duration: 1,
+          });
           this.$axios
               .get(url, {
                 params: {
@@ -322,6 +329,7 @@ export default {
                 },
               })
               .then((data) => {
+                toast.clear()
                 //console.log(data)
                 if (data.data.msg == '暂无更多推荐内容!') {
                   this.showMsg = true
@@ -372,7 +380,8 @@ export default {
               this.active();
             });
       }
-    },
+    }
+    ,
 
     readScrollFnc() {
       let MainData = sessionStorage[`${this.data}-${this.id}`];
@@ -386,14 +395,16 @@ export default {
       } else {
         this.pont = false;
       }
-    },
+    }
+    ,
 
     onRefresh() {
       setTimeout(() => {
         this.getData(this.url, this.isLoading);
         this.isLoading = false;
       }, 1000);
-    },
+    }
+    ,
 
     onLoad() {
       // 异步更新数据
@@ -408,16 +419,19 @@ export default {
         this.getData(this.url, this.isLoading);
         this.loading = false;
       }, 1000);
-    },
+    }
+    ,
 
     backTop() {
       this.$refs.item.scrollTop = 0;
-    },
+    }
+    ,
 
     saveDate(data) {
       let value = JSON.stringify(data);
       sessionStorage[this.data + "-" + this.id] = value;
-    },
+    }
+    ,
 
 
     copy(content, url) {
@@ -478,11 +492,12 @@ export default {
         // 释放内存
         clipboard.destroy();
       });
-    },
+    }
+    ,
 
-    // getContainer() {
-    //   return document.querySelector(".main-text");
-    // },
+// getContainer() {
+//   return document.querySelector(".main-text");
+// },
 
     collection(data) {
       // console.log(data)
@@ -500,7 +515,8 @@ export default {
       localStorage.setItem("collection", dataListStr);
       this.active();
       this.show = false;
-    },
+    }
+    ,
 
     active() {
       this.playingIndex = null
@@ -531,11 +547,13 @@ export default {
 
       //console.log(dataArr);
       sessionStorage[`${this.data}-${this.id}`] = JSON.stringify(dataArr);
-    },
+    }
+    ,
 
     colseBtn() {
       this.show = false;
-    },
+    }
+    ,
 
     showpopup(avatar, name, time, title, height, imgUrl, id, check) {
       let data = {
@@ -553,11 +571,13 @@ export default {
       } else {
         this.show = true;
       }
-    },
+    }
+    ,
 
     shareMain() {
       this.showShare = true;
-    },
+    }
+    ,
 
   },
 
@@ -566,7 +586,8 @@ export default {
       this.getData(newUrl, this.loading);
       this.video()
       this.active();
-    },
+    }
+    ,
 
     random(newValue) {
       if (newValue == true) {
@@ -586,7 +607,8 @@ export default {
       this.isLoading = true
       this.onRefresh()
     }
-  },
+  }
+  ,
 
   created() {
     //console.log(this.url)
@@ -594,20 +616,21 @@ export default {
   }
   ,
 
-  // mounted() {
-  //   // 监听浏览器的刷新事件
-  //   window.addEventListener("beforeunload", this.unload);
-  //   // window.addEventListener('beforeunload', e => this.unload) // 注册一个匿名函数
-  // }
-  // ,
-  //
-  // // 2 销毁这个监听事件
-  // destroyed() {
-  //   // 销毁这个监听事件，需要找到这个函数，如果使用的是匿名函数的话，无法查找这个函数，这个事件也就没有办法被移除 ，在其他页面仍然会执行这个监听事件
-  //   window.removeEventListener("beforeunload", this.unload);
-  // }
-  // ,
-};
+// mounted() {
+//   // 监听浏览器的刷新事件
+//   window.addEventListener("beforeunload", this.unload);
+//   // window.addEventListener('beforeunload', e => this.unload) // 注册一个匿名函数
+// }
+// ,
+//
+// // 2 销毁这个监听事件
+// destroyed() {
+//   // 销毁这个监听事件，需要找到这个函数，如果使用的是匿名函数的话，无法查找这个函数，这个事件也就没有办法被移除 ，在其他页面仍然会执行这个监听事件
+//   window.removeEventListener("beforeunload", this.unload);
+// }
+// ,
+}
+;
 </script>
 
 

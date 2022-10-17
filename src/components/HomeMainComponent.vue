@@ -168,7 +168,7 @@
     </van-popup
     >
     <van-share-sheet v-model="showShare" :options="options"/>
-    <MessageNoneComponent v-if="showMsg"></MessageNoneComponent>
+    <MessageNoneComponent v-if="showMsg" :text="`无结果，换个关键词试试吧`"></MessageNoneComponent>
   </div>
 </template>
 
@@ -302,6 +302,11 @@ export default {
           });
           this.active();
         } else {
+          const toast = this.$toast.loading({
+            message: '加载中...',
+            forbidClick: true,
+            duration: 1,
+          });
           this.$axios
               .get(url, {
                 params: {
@@ -311,6 +316,7 @@ export default {
                 },
               })
               .then((data) => {
+                toast.clear()
                 //console.log(data)
                 if (data.data.msg == '暂无更多推荐内容!') {
                   this.showMsg = true

@@ -1,16 +1,18 @@
 <template>
   <div class="daily" :style="{backgroundImage:`url(${dataPage[acitve]?.icon})`}">
     <swiper ref="swiper" class="swiper" :options="swiperOption">
-      <swiper-slide v-for="item in dataPage" :key="item.id">
-        <div class="img">
-          <img class="img-auto" :src="item.icon"/>
-        </div>
-      </swiper-slide>
+      <template v-for="(item,index) in dataPage">
+        <swiper-slide :key="item.id" v-if="index < 8">
+          <div class="img">
+            <img class="img-auto" :src="item.icon"/>
+          </div>
+        </swiper-slide>
+      </template>
     </swiper>
 
     <div class="index">
       <span>{{ acitve + 1 }}</span>
-      <span style="color: #ffffff96">/{{ dataPage.length }}</span>
+      <span style="color: #ffffff96">/{{ dataPage.length - 1 }}</span>
     </div>
     <div class="blur"></div>
 
@@ -157,9 +159,15 @@ export default {
     },
     getData() {
       if (!sessionStorage.daliy) {
+        const toast = this.$toast.loading({
+          message: '加载中...',
+          forbidClick: true,
+          duration: 1,
+        });
         this.$axios
             .get('/api/rest/app/lists/daily')
             .then((data) => {
+              toast.clear();
               // console.log(data.data.data)
               this.dataPage = data.data.data.filter((item) => {
                 item.check = false;

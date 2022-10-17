@@ -108,7 +108,7 @@
     </van-popup
     >
     <van-share-sheet v-model="showShare" :options="options"/>
-    <MessageNoneComponent v-if="showMsg"></MessageNoneComponent>
+    <MessageNoneComponent v-if="showMsg" :text="`你还没收藏过心情呢`"></MessageNoneComponent>
   </div>
 </template>
 
@@ -189,6 +189,9 @@ export default {
     getData() {
       let MainData = JSON.parse(localStorage.collection);
       this.dataPage = MainData
+      if (this.dataPage.length === 0) {
+        this.showMsg = true
+      }
     },
 
 

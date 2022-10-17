@@ -3,7 +3,7 @@
     <van-empty
         class="custom-image"
         :image="url"
-        description="无结果，换个关键词试试吧"
+        :description="text"
     />
   </div>
 </template>
@@ -11,6 +11,11 @@
 <script>
 export default {
   name: "MessageNoneComponent",
+  props: {
+    text: {
+      type: String,
+    }
+  },
   data() {
     return {
       url: require("@/assets/images/ic_empty.png")

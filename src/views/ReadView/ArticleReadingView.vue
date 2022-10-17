@@ -4,7 +4,7 @@
       <div class="img" @click="$router.go(-1)">
         <img class="img-auto" src="@/assets/images/ic_left_back_black.png">
       </div>
-      <div class="title">35215563</div>
+      <div class="title">{{title}}</div>
       <div class="img">
         <img class="img-auto" src="@/assets/images/ic_share.png">
       </div>
@@ -20,13 +20,16 @@ export default {
   data() {
     return {
       url: null,
-      dataHtml: null
+      dataHtml: null,
+      title: null,
     }
   },
 
   methods: {
     getData() {
       let {id} = this.$route.query;
+      let {title} = this.$route.query
+      this.title = title
       this.$axios
           .get('/app/view/posts.html', {
             params: {
