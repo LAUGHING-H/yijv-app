@@ -187,8 +187,15 @@ export default {
     },
 
     getData() {
-      let MainData = JSON.parse(localStorage.collection);
-      this.dataPage = MainData
+      if (localStorage.collection) {
+        let MainData = JSON.parse(localStorage?.collection)
+        this.dataPage = MainData
+      } else {
+        console.log(123)
+        localStorage.collection = JSON.stringify([])
+      }
+
+
       if (this.dataPage.length === 0) {
         this.showMsg = true
       }
