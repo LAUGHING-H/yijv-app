@@ -1,37 +1,36 @@
 <template>
-  <div class="item" ref="item" @scroll.passive="readScrollFnc"
-  >
+  <div class="item" ref="item" @scroll.passive="readScrollFnc">
     <van-list
-        :immediate-check="false"
-        v-model="loading"
-        :finished="finished"
-        finished-text="没有更多了"
-        @load="onLoad"
+      :immediate-check="false"
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
     >
       <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
         <div
-            class="list"
-            v-for="(item, index) in dataPage.dataItem"
-            :key="index + new Date().getTime() + item.time"
+          class="list"
+          v-for="(item, index) in dataPage.dataItem"
+          :key="index + new Date().getTime() + item.time"
         >
           <div class="top">
             <div class="Profile-photo">
-              <img class="img-auto yuan" :src="item.avatar" alt=""/>
+              <img class="img-auto yuan" :src="item.avatar" alt="" />
             </div>
             <div class="name">{{ item.name }}</div>
             <div class="icon-sl" @click="showT">
               <img
-                  class="img-auto"
-                  src="@/assets/images/ic_feeds_more.png"
-                  alt=""
+                class="img-auto"
+                src="@/assets/images/ic_feeds_more.png"
+                alt=""
               />
             </div>
             <div class="time">
               <div class="icon-time">
                 <img
-                    class="img-auto"
-                    src="@/assets/images/icon_time.png"
-                    alt=""
+                  class="img-auto"
+                  src="@/assets/images/icon_time.png"
+                  alt=""
                 />
               </div>
               <div class="date">{{ date(item.time) }}</div>
@@ -39,8 +38,8 @@
           </div>
           <div class="text">{{ item.title }}</div>
           <div
-              class="img"
-              :style="{
+            class="img"
+            :style="{
               width: '100%',
               height: `calc(${
                 item.icons[0].h == 0 ? 497 : item.icons[0].h
@@ -48,38 +47,38 @@
             }"
           >
             <img
-                class="img-auto yuan-border"
-                radius="5"
-                @click="imgLook(item.icons[0].url)"
-                :src="item.icons[0].url"
-                :v-lazy="item.icons[0].url"
+              class="img-auto yuan-border"
+              radius="5"
+              @click="imgLook(item.icons[0].url)"
+              :src="item.icons[0].url"
+              :v-lazy="item.icons[0].url"
             />
           </div>
 
           <div class="main">
             <div
-                class="list-main copy"
-                @click="copy(item.title, item.icons[0].url)"
+              class="list-main copy"
+              @click="copy(item.title, item.icons[0].url)"
             >
               <div class="icon">
-                <img class="img-auto" src="@/assets/images/copy.png" alt=""/>
+                <img class="img-auto" src="@/assets/images/copy.png" alt="" />
               </div>
               <div class="main-text">复制内容</div>
             </div>
             <div class="list-main">
               <div class="icon" v-if="!item.check">
-                <img class="img-auto" src="@/assets/images/xing.png" alt=""/>
+                <img class="img-auto" src="@/assets/images/xing.png" alt="" />
               </div>
               <div class="icon" v-if="item.check">
                 <img
-                    class="img-auto"
-                    src="@/assets/images/activexing.png"
-                    alt=""
+                  class="img-auto"
+                  src="@/assets/images/activexing.png"
+                  alt=""
                 />
               </div>
               <div
-                  class="main-text"
-                  @click="
+                class="main-text"
+                @click="
                   showpopup(
                     item.avatar,
                     item.name,
@@ -97,7 +96,7 @@
             </div>
             <div class="list-main" @click="shareMain()">
               <div class="icon">
-                <img class="img-auto" src="@/assets/images/share.png" alt=""/>
+                <img class="img-auto" src="@/assets/images/share.png" alt="" />
               </div>
               <div class="main-text">分享内容</div>
             </div>
@@ -106,29 +105,29 @@
         <div class="pont" v-show="pont" @click="backTop">
           <div class="img">
             <img
-                ref="active"
-                class="img-auto"
-                src="@/assets/images/ic_list_scroll_top_arraw.png"
-                alt=""
+              ref="active"
+              class="img-auto"
+              src="@/assets/images/ic_list_scroll_top_arraw.png"
+              alt=""
             />
           </div>
         </div>
       </van-pull-refresh>
     </van-list>
     <van-popup
-        class="popup"
-        v-model="show"
-        lazy-render
-        round
-        position="bottom"
-        :style="{ height: '30%' }"
+      class="popup"
+      v-model="show"
+      lazy-render
+      round
+      position="bottom"
+      :style="{ height: '30%' }"
     >
       <div class="choose-btn">
         <div class="colse-btn" @click="colseBtn">
           <img
-              class="img-auto"
-              src="@/assets/images/ic_layer_menu_close.png"
-              alt=""
+            class="img-auto"
+            src="@/assets/images/ic_layer_menu_close.png"
+            alt=""
           />
         </div>
         <div class="text">选择收藏夹</div>
@@ -136,39 +135,40 @@
           <span>新建</span>
           <div class="add-btn">
             <img
-                class="img-auto"
-                src="@/assets/images/ic_permissions_file.png"
-                alt=""
+              class="img-auto"
+              src="@/assets/images/ic_permissions_file.png"
+              alt=""
             />
           </div>
         </div>
       </div>
       <div class="file" @click="collection(dataLs)">
         <div class="img">
-          <img class="img-auto" src="@/assets/images/ic_folder.png" alt=""/>
+          <img class="img-auto" src="@/assets/images/ic_folder.png" alt="" />
         </div>
         <div class="file-name">默认收藏夹</div>
       </div>
-    </van-popup
-    >
+    </van-popup>
     <van-popup
-        class="popup-two"
-        v-model="showTwo"
-        lazy-render
-        round
-        position="bottom"
-        :style="{ height: '30%' }"
+      class="popup-two"
+      v-model="showTwo"
+      lazy-render
+      round
+      position="bottom"
+      :style="{ height: '30%' }"
     >
       <div class="list">复制内容</div>
       <div class="list">下载配图</div>
       <div class="list">不感兴趣</div>
       <div class="list">违规举报</div>
       <div class="list">一键转发朋友圈</div>
-      <div class="cancel" @click="showTwo=false">取消</div>
-    </van-popup
-    >
-    <van-share-sheet v-model="showShare" :options="options"/>
-    <MessageNoneComponent v-if="showMsg" :text="`无结果，换个关键词试试吧`"></MessageNoneComponent>
+      <div class="cancel" @click="showTwo = false">取消</div>
+    </van-popup>
+    <van-share-sheet v-model="showShare" :options="options" />
+    <MessageNoneComponent
+      v-if="showMsg"
+      :text="`无结果，换个关键词试试吧`"
+    ></MessageNoneComponent>
   </div>
 </template>
 
@@ -176,10 +176,9 @@
 
 <script>
 import Clipboard from "clipboard";
-import MessageNoneComponent from "@/components/MessageNoneComponent.vue"
+import MessageNoneComponent from "@/components/MessageNoneComponent.vue";
 
-
-import {ImagePreview} from "vant";
+import { ImagePreview } from "vant";
 
 export default {
   props: {
@@ -213,16 +212,16 @@ export default {
       showMsg: false,
       options: [
         [
-          {name: "微信好友", icon: "wechat"},
-          {name: "QQ好友", icon: "qq"},
-          {name: "朋友圈", icon: "wechat-moments"},
-          {name: "微博", icon: "weibo"},
+          { name: "微信好友", icon: "wechat" },
+          { name: "QQ好友", icon: "qq" },
+          { name: "朋友圈", icon: "wechat-moments" },
+          { name: "微博", icon: "weibo" },
         ],
         [
-          {name: "复制链接", icon: "link"},
-          {name: "分享海报", icon: "poster"},
-          {name: "二维码", icon: "qrcode"},
-          {name: "小程序码", icon: "weapp-qrcode"},
+          { name: "复制链接", icon: "link" },
+          { name: "分享海报", icon: "poster" },
+          { name: "二维码", icon: "qrcode" },
+          { name: "小程序码", icon: "weapp-qrcode" },
         ],
       ],
     };
@@ -256,7 +255,7 @@ export default {
   },
 
   components: {
-    MessageNoneComponent
+    MessageNoneComponent,
   },
 
   methods: {
@@ -267,28 +266,28 @@ export default {
     },
 
     showT() {
-      this.showTwo = true
+      this.showTwo = true;
     },
 
     getData(url, loading) {
       if (loading == true) {
         this.$axios
-            .get(url, {
-              params: {page: 0, r: new Date().getTime(), full: true},
-            })
-            .then((data) => {
-              // console.log(data);
-              this.dataPage.base = data.data.base;
-              this.dataPage.page = 0;
-              this.dataPage.dataItem = data.data.data.filter((item) => {
-                item.check = false;
-                return item.cate == 101;
-              });
-              this.dataPage.readScroll = 0;
-              //console.log(this.dataPage);
-              this.saveDate(this.dataPage);
-              this.active();
+          .get(url, {
+            params: { page: 0, r: new Date().getTime(), full: true },
+          })
+          .then((data) => {
+            // console.log(data);
+            this.dataPage.base = data.data.base;
+            this.dataPage.page = 0;
+            this.dataPage.dataItem = data.data.data.filter((item) => {
+              item.check = false;
+              return item.cate == 101;
             });
+            this.dataPage.readScroll = 0;
+            //console.log(this.dataPage);
+            this.saveDate(this.dataPage);
+            this.active();
+          });
       } else {
         let MainData = sessionStorage[`${this.data}-${this.id}`];
         if (MainData) {
@@ -303,38 +302,38 @@ export default {
           this.active();
         } else {
           const toast = this.$toast.loading({
-            message: '加载中...',
+            message: "加载中...",
             forbidClick: true,
             duration: 1,
           });
           this.$axios
-              .get(url, {
-                params: {
-                  page: 0,
-                  r: new Date().getTime(),
-                  full: true,
-                },
-              })
-              .then((data) => {
-                toast.clear()
-                //console.log(data)
-                if (data.data.msg == '暂无更多推荐内容!') {
-                  this.showMsg = true
-                  return
-                }
-                this.dataPage.base = data.data.base;
-                this.dataPage.dataItem = data.data.data.filter((item) => {
-                  item.check = false;
-                  return item.cate == 101;
-                });
-                //console.log(this.dataPage.base);
-                //console.log(this.dataPage);
-                this.saveDate(this.dataPage);
-                this.$nextTick(() => {
-                  this.$refs.item.scrollTop = 0;
-                });
-                this.active();
+            .get(url, {
+              params: {
+                page: 0,
+                r: new Date().getTime(),
+                full: true,
+              },
+            })
+            .then((data) => {
+              toast.clear();
+              //console.log(data)
+              if (data.data.msg == "暂无更多推荐内容!") {
+                this.showMsg = true;
+                return;
+              }
+              this.dataPage.base = data.data.base;
+              this.dataPage.dataItem = data.data.data.filter((item) => {
+                item.check = false;
+                return item.cate == 101;
               });
+              //console.log(this.dataPage.base);
+              //console.log(this.dataPage);
+              this.saveDate(this.dataPage);
+              this.$nextTick(() => {
+                this.$refs.item.scrollTop = 0;
+              });
+              this.active();
+            });
         }
       }
 
@@ -342,28 +341,28 @@ export default {
         let MainData = sessionStorage[`${this.data}-${this.id}`];
         MainData = JSON.parse(MainData);
         this.$axios
-            .get(url, {
-              params: {
-                page: MainData.page++,
-                r: new Date().getTime(),
-                base: this.dataPage.base,
-                full: false,
-              },
-            })
-            .then((data) => {
-              this.dataPage.base = data.data.base;
+          .get(url, {
+            params: {
+              page: MainData.page++,
+              r: new Date().getTime(),
+              base: this.dataPage.base,
+              full: false,
+            },
+          })
+          .then((data) => {
+            this.dataPage.base = data.data.base;
 
-              this.dataPage.dataItem.push(
-                  ...data.data.data.filter((item) => {
-                    item.check = false;
-                    return item.cate == 101;
-                  })
-              );
-              //console.log(this.dataPage.base);
-              //console.log(this.dataPage);
-              this.saveDate(this.dataPage);
-              this.active();
-            });
+            this.dataPage.dataItem.push(
+              ...data.data.data.filter((item) => {
+                item.check = false;
+                return item.cate == 101;
+              })
+            );
+            //console.log(this.dataPage.base);
+            //console.log(this.dataPage);
+            this.saveDate(this.dataPage);
+            this.active();
+          });
       }
     },
 
@@ -412,7 +411,6 @@ export default {
       sessionStorage[this.data + "-" + this.id] = value;
     },
 
-
     copy(content, url) {
       var clipboard = new Clipboard(".copy", {
         text: function () {
@@ -437,19 +435,19 @@ export default {
               //设置相应类型为blob
               responseType: "blob",
             }).then(
-                //得到的是一个blob对象
-                (res) => {
-                  let url = window.URL.createObjectURL(res.data);
-                  const a = document.createElement("a");
-                  a.href = url;
-                  a.download = name;
-                  a.click();
-                  this.$toast({
-                    message: "图片保存完成",
-                    position: "bottom",
-                    className: "imgDownload",
-                  });
-                }
+              //得到的是一个blob对象
+              (res) => {
+                let url = window.URL.createObjectURL(res.data);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = name;
+                a.click();
+                this.$toast({
+                  message: "图片保存完成",
+                  position: "bottom",
+                  className: "imgDownload",
+                });
+              }
             );
           },
         });
@@ -478,15 +476,15 @@ export default {
     // },
 
     collection(data) {
-      console.log(data)
+      console.log(data);
       let dataList = JSON.parse(localStorage.getItem("collection")) ?? [];
       if (dataList.findIndex((item) => item.idLs == data.idLs) === -1) {
-        console.log(data)
+        console.log(data);
         dataList.push(data);
       } else {
         dataList.splice(
-            dataList.findIndex((item) => item.idLs === data.idLs),
-            1
+          dataList.findIndex((item) => item.idLs === data.idLs),
+          1
         );
       }
       let dataListStr = JSON.stringify(dataList);
@@ -506,9 +504,9 @@ export default {
         // );
         if (dataList.length !== 0) {
           if (
-              dataList.findIndex(
-                  (item) => item.idLs === dataArr.dataItem[i].id
-              ) === -1
+            dataList.findIndex(
+              (item) => item.idLs === dataArr.dataItem[i].id
+            ) === -1
           ) {
             dataArr.dataItem[i].check = false;
           } else {
@@ -562,8 +560,7 @@ export default {
   created() {
     //console.log(this.url)
     this.getData(this.url, this.loading);
-  }
-  ,
+  },
 
   // mounted() {
   //   // 监听浏览器的刷新事件
@@ -593,6 +590,10 @@ export default {
   padding-bottom: 95px;
   background-color: #f2f2f2;
   z-index: 1;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   .popup {
     width: 100%;
