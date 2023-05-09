@@ -1,29 +1,10 @@
-# yijv-app
+# 一句App
 
 # 项目效果图
 <img src="./src/assets/images/yijv-app.gif">
 
-## Project setup
+## 【设计目标】
 ```
-npm install
+一句心灵感悟，一句浪漫宣言，有一句真挚的话语，洗涤心灵的尘埃，带给读者温暖的心语，
+评优美文字，看兴趣视频，助读者读懂人生道理，感悟人生精彩。
 ```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-
