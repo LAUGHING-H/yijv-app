@@ -1,5 +1,8 @@
 # yijv-app
 
+# 项目效果图
+<img src="./src/assets/images/yijv-app.gif">
+
 ## Project setup
 ```
 npm install
@@ -22,3 +25,5 @@ npm run lint
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
